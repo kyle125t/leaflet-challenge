@@ -13,3 +13,11 @@ var myMap = L.map("map", {
 
   // Set URL variable as All Earthquakes from the last month
   var queryURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+
+  // Legend colors
+  // green: #ff3333
+  // yellow green: #ff8333
+  // yellow: #ffbe33
+  // orange: #fcff33
+  // orange red: #c4ff33
+  // red: #2ecc71
