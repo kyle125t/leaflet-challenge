@@ -21,3 +21,16 @@ var myMap = L.map("map", {
   // orange: #fcff33
   // orange red: #c4ff33
   // red: #2ecc71
+
+  d3.json(queryUrl, function(data) {
+    function magStyle(feature) {
+      return {
+        opacity: 1,
+        fillOpacity: 1,
+        fillColor: magColor(feature.properties.mag),
+        color: "#000000",
+        radius: magRadius(feature.properties.mag),
+        stroke: true,
+        weight: 0.5
+      };
+    }
