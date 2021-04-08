@@ -1,11 +1,16 @@
 // Anchor map w/ background image
+
+// /v4/styles/mapbox/
+
 var tileMap = L.tileLayer(
-  "https://api.mapbox.com/styles/v4/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  {
+    attribution:
+      "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
     maxZoom: 18,
     zoomOffset: -1,
-    id: "light-v10",
+    id: "mapbox/light-v10",
     accessToken: API_KEY
   });
 
@@ -30,7 +35,8 @@ tileMap.addTo(myMap);
 // orange red: #c4ff33
 // red: #2ecc71
 
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson", function(error, data) {
+// d3.json(queryURL, function(data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data) {
   function magStyle(feature) {
     return {
       opacity: 1,
