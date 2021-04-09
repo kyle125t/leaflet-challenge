@@ -1,9 +1,7 @@
 // Anchor map w/ background image
-
-// /v4/styles/mapbox/
-
+// Tile layer
 var tileMap = L.tileLayer(
-  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+  "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}",
   {
     attribution:
       "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -14,29 +12,22 @@ var tileMap = L.tileLayer(
     accessToken: API_KEY
   });
 
-// We create the map object with options.
+// Map object
 var myMap = L.map("mapid", {
   center: [
-    40.7, -94.5
+    39.8283, -98.5795
   ],
-  zoom: 3
+  zoom: 5
 });
 
+// Add tile layer to map
 tileMap.addTo(myMap);
 
 // Set URL variable as All Earthquakes from the last month
 // var queryURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
-// Legend/magnitude colors
-// green: #ff3333
-// yellow green: #ff8333
-// yellow: #ffbe33
-// orange: #fcff33
-// orange red: #c4ff33
-// red: #2ecc71
-
 // d3.json(queryURL, function(data) {
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson").then(function(data) {
   function magStyle(feature) {
     return {
       opacity: 1,
@@ -45,35 +36,47 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
       color: "#000000",
       radius: magRadius(feature.properties.mag),
       stroke: true,
-      weight: 0.5
+      weight: 0.75
     };
   }
-  function magColor(magnitude) {
+
+  // Legend/mag colors
+  // green: #ff3333
+  // yellow green: #ff8333
+  // yellow: #ffbe33
+  // orange: #fcff33
+  // orange red: #c4ff33
+  // red: #2ecc71
+
+  // Define colors for each magnitude
+  function magColor(mag) {
       switch (true) {   
-      case magnitude > 1:
+      case mag > 1:
           return "#ff8333";
 
-      case magnitude > 2:
+      case mag > 2:
           return "#ffbe33";
 
-      case magnitude > 3:
+      case mag > 3:
           return "#fcff33";
 
-      case magnitude > 4:
+      case mag > 4:
           return "#c4ff33";
 
-      case magnitude > 5:
+      case mag > 5:
           return "#2ecc71";
 
       default:
           return "#ff3333";
       };
     };
-  function magRadius(magnitude) {
-    if (magnitude === 0) {
+
+  // Define radius for circles based off magnitude size  
+  function magRadius(mag) {
+    if (mag === 0) {
       return 1;
     };
-    return magnitude * 4;
+    return mag * 5;
   };
 
   L.geoJson(data, {
@@ -86,19 +89,19 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     }
   }).addTo(myMap);
 
+  // Create legend 
   var legend = L.control({
     position: "bottomright"
   });
   legend.onAdd = function() {
     var div = L.DomUtil.create("div", "info legend");
-    var grades = [0, 1, 2, 3, 4, 5];
+    var magLevel = [0, 1, 2, 3, 4, 5];
     var colors = ["#ff3333", "#ff8333", "#ffbe33", "#fcff33", "#c4ff33", "#2ecc71"];
-    for (var i = 0; i < grades.length; i++) {
-      div.innerHTML +=
-      "<i style='background: " + colors[i] + "'></i> " +
-      grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+    for (var i = 0; i < magLevel.length; i++) {
+      div.innerHTML += "<i style='background: " + colors[i] + "'></i> " + magLevel[i] + (magLevel[i + 1] ? "&ndash;" + magLevel[i + 1] + "<br>" : "+");
       }
     return div;
   };
+  // Add legend
   legend.addTo(myMap);
 });
